@@ -22,11 +22,12 @@ class _ContentState extends State<Content> {
         backgroundColor: Colors.transparent,
         appBar: widget.hasAppbar
             ? AppBar(
+                automaticallyImplyLeading: false,
                 centerTitle: widget.isCenter,
                 toolbarHeight: 40,
                 title: Text(
                   widget.appBarTitle,
-                  style: TextStyle(fontSize: 14),
+                  style: const TextStyle(fontSize: 14),
                 ),
               )
             : null,

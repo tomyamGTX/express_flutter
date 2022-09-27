@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Express Flutter',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Express Flutter Demo Home Page'),
     );
   }
 }
@@ -70,249 +70,228 @@ class MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
+      drawer: Drawer(
+        child: ListView(
+          padding: const EdgeInsets.all(10),
+          primary: false,
+          shrinkWrap: true,
+          children: [
             Padding(
-              padding: const EdgeInsets.all(80.0),
+              padding: const EdgeInsets.only(bottom: 80.0, top: 40),
               child: Text(
                 'EXPRESS FLUTTER',
+                textAlign: TextAlign.center,
                 style: const TextTheme(titleLarge: TextStyle(fontSize: 40))
                     .titleLarge,
               ),
             ),
-            Flexible(
-              child: SingleChildScrollView(
-                child: Wrap(
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  spacing: 100,
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
+                decoration: const InputDecoration(
+                    labelText: 'Change Widget Name',
+                    border: OutlineInputBorder()),
+                initialValue: cname,
+                onChanged: (v) {
+                  setState(() {
+                    cname = v;
+                  });
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ExpansionTileCard(
+                  baseColor: Colors.amber,
+                  expandedColor: Colors.amberAccent,
+                  title: const Text('Emulator Setting'),
                   children: [
-                    Container(
+                    ListTile(
+                        leading: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _width = _width - 2;
+                            });
+                          },
+                          icon: const Icon(Icons.exposure_minus_2_sharp),
+                        ),
+                        title: const Text(
+                          'Change Width',
+                          textAlign: TextAlign.center,
+                        ),
+                        subtitle: Text(
+                          '($_width)',
+                          textAlign: TextAlign.center,
+                        ),
+                        trailing: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _width = _width + 2;
+                            });
+                          },
+                          icon: Icon(Icons.exposure_plus_2_sharp),
+                        )),
+                    ListTile(
+                        leading: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _height = _height - 2;
+                            });
+                          },
+                          icon: Icon(Icons.exposure_minus_2_sharp),
+                        ),
+                        title: const Text(
+                          'Change height',
+                          textAlign: TextAlign.center,
+                        ),
+                        subtitle: Text(
+                          '($_height)',
+                          textAlign: TextAlign.center,
+                        ),
+                        trailing: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _height = _height + 2;
+                            });
+                          },
+                          icon: const Icon(Icons.exposure_plus_2_sharp),
+                        )),
+                  ]),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ExpansionTileCard(
+                  baseColor: Colors.amber,
+                  expandedColor: Colors.amberAccent,
+                  title: const Text('App Bar'),
+                  leading: Switch(
+                    value: hasAppBar,
+                    onChanged: (bool value) {
+                      setState(() {
+                        if (value) {
+                          list.add(appBarText(appBarTitle));
+                        } else {
+                          list.removeAt(0);
+                        }
+                        hasAppBar = value;
+                      });
+                    },
+                  ),
+                  children: [
+                    ListTile(
+                      trailing: Switch(
+                        value: isCenter,
+                        onChanged: (bool value) {
+                          if (value) {
+                            list.removeAt(0);
+                            list.add(appBarTextCenter(appBarTitle));
+                          } else {
+                            list.removeAt(0);
+                          }
+                          setState(() {
+                            isCenter = value;
+                          });
+                        },
+                      ),
+                      title: const Text('Center Title'),
+                    ),
+                    if (hasAppBar)
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextFormField(
+                          initialValue: appBarTitle,
+                          decoration: const InputDecoration(
+                              labelText: 'Change Appbar Title',
+                              border: OutlineInputBorder()),
+                          onChanged: (v) {
+                            setState(() {});
+                            list.removeAt(0);
+                            if (isCenter) {
+                              list.add(appBarTextCenter(v));
+                            } else {
+                              list.add(appBarText(v));
+                            }
+                            appBarTitle = v;
+                          },
+                        ),
+                      ),
+                  ]),
+            ),
+          ],
+        ),
+      ),
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
+      body: Center(
+        // Center is a layout widget. It takes a single child and positions it
+        // in the middle of the parent.
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Flexible(
+              child: Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
+                spacing: 100,
+                children: [
+                  Container(
                       height: _height,
-                      width: _width,
+                      width: 400,
                       decoration: BoxDecoration(
-                          color: Colors.black,
+                          color: Colors.blueGrey,
                           borderRadius: BorderRadius.circular(10)),
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(
-                          vertical: 16,
-                          horizontal: 8,
-                        ),
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                        ),
-                        child: Content(
-                          hasAppbar: hasAppBar,
-                          appBarTitle: appBarTitle,
-                          isCenter: isCenter,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Container(
-                          height: _height,
-                          width: MediaQuery.of(context).size.width * .3,
-                          decoration: BoxDecoration(
-                              color: Colors.blueGrey,
-                              borderRadius: BorderRadius.circular(10)),
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text('SOURCE CODE\n'),
-                                Text("class $cname extends StatefulWidget {"
-                                    "\n {Key? key}): super(key: key);\n"
-                                    "\n @override\n"
-                                    "  State<$cname> createState() => _${cname}State();\n"
-                                    " }\n"
-                                    " \nclass _${cname}State extends State<$cname> {\n"
-                                    "  @override\n"
-                                    "  Widget build(BuildContext context) {\n"
-                                    "       return Scaffold("),
-                                if (list.isNotEmpty)
-                                  for (var item in list) ...[
-                                    Text(item),
-                                  ],
-                                if (list.isEmpty)
-                                  const Text("              body:Container()"),
-                                const Text(
-                                  "       );\n"
-                                  "    }\n"
-                                  "  }",
-                                ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text('SOURCE CODE\n'),
+                            Text("class $cname extends StatefulWidget {"
+                                "\n  const $cname{Key? key}): super(key: key);\n"
+                                "\n @override\n"
+                                "  State<$cname> createState() => _${cname}State();\n"
+                                " }\n"
+                                " \nclass _${cname}State extends State<$cname> {\n"
+                                "  @override\n"
+                                "  Widget build(BuildContext context) {\n"
+                                "       return Scaffold("),
+                            if (list.isNotEmpty)
+                              for (var item in list) ...[
+                                Text(item),
                               ],
+                            if (list.isEmpty)
+                              const Text("              body:Container()"),
+                            const Text(
+                              "       );\n"
+                              "    }\n"
+                              "  }",
                             ),
-                          )),
-                    ),
-                    Container(
-                      height: 300,
-                      width: 300,
-                      child: ListView(
-                        padding: const EdgeInsets.all(8),
-                        primary: false,
-                        shrinkWrap: true,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: TextFormField(
-                              decoration: const InputDecoration(
-                                  labelText: 'Change Widget Name',
-                                  border: OutlineInputBorder()),
-                              initialValue: cname,
-                              onChanged: (v) {
-                                setState(() {
-                                  cname = v;
-                                });
-                              },
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ExpansionTileCard(
-                                baseColor: Colors.amber,
-                                expandedColor: Colors.amberAccent,
-                                title: const Text('Emulator Setting'),
-                                children: [
-                                  ListTile(
-                                      leading: IconButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            _width = _width - 2;
-                                          });
-                                        },
-                                        icon: const Icon(
-                                            Icons.exposure_minus_2_sharp),
-                                      ),
-                                      title: const Text(
-                                        'Change Width',
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      subtitle: Text(
-                                        '($_width)',
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      trailing: IconButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            _width = _width + 2;
-                                          });
-                                        },
-                                        icon: Icon(Icons.exposure_plus_2_sharp),
-                                      )),
-                                  ListTile(
-                                      leading: IconButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            _height = _height - 2;
-                                          });
-                                        },
-                                        icon:
-                                            Icon(Icons.exposure_minus_2_sharp),
-                                      ),
-                                      title: const Text(
-                                        'Change height',
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      subtitle: Text(
-                                        '($_height)',
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      trailing: IconButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            _height = _height + 2;
-                                          });
-                                        },
-                                        icon: const Icon(
-                                            Icons.exposure_plus_2_sharp),
-                                      )),
-                                ]),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ExpansionTileCard(
-                                baseColor: Colors.amber,
-                                expandedColor: Colors.amberAccent,
-                                title: const Text('App Bar'),
-                                leading: Switch(
-                                  value: hasAppBar,
-                                  onChanged: (bool value) {
-                                    setState(() {
-                                      if (value) {
-                                        list.add(appBarText(appBarTitle));
-                                      } else {
-                                        list.removeAt(0);
-                                      }
-                                      hasAppBar = value;
-                                    });
-                                  },
-                                ),
-                                children: [
-                                  ListTile(
-                                    trailing: Switch(
-                                      value: isCenter,
-                                      onChanged: (bool value) {
-                                        if (value) {
-                                          list.removeAt(0);
-                                          list.add(
-                                              appBarTextCenter(appBarTitle));
-                                        } else {
-                                          list.removeAt(0);
-                                        }
-                                        setState(() {
-                                          isCenter = value;
-                                        });
-                                      },
-                                    ),
-                                    title: const Text('Center Title'),
-                                  ),
-                                  if (hasAppBar)
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: TextFormField(
-                                        initialValue: appBarTitle,
-                                        decoration: const InputDecoration(
-                                            labelText: 'Change Appbar Title',
-                                            border: OutlineInputBorder()),
-                                        onChanged: (v) {
-                                          setState(() {});
-                                          list.removeAt(0);
-                                          if (isCenter) {
-                                            list.add(appBarTextCenter(v));
-                                          } else {
-                                            list.add(appBarText(v));
-                                          }
-                                          appBarTitle = v;
-                                        },
-                                      ),
-                                    ),
-                                ]),
-                          ),
-                        ],
+                          ],
+                        ),
+                      )),
+                  Container(
+                    height: _height,
+                    width: _width,
+                    decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(
+                        vertical: 16,
+                        horizontal: 8,
+                      ),
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                      ),
+                      child: Content(
+                        hasAppbar: hasAppBar,
+                        appBarTitle: appBarTitle,
+                        isCenter: isCenter,
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             )
           ],
